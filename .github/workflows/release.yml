@@ -19,6 +19,19 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx electron-builder --win nsis --publish always
+      - name: Montar o instalador
+        run: npx electron-builder --win nsis --publish never
+      - name: Publicar a versão
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          files="dist/Ritmo-Instalador.exe dist/Ritmo-Instalador.exe.blockmap dist/latest.yml"
+          ls -l $files
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" $files --clobber
+          else
+            gh release create "$tag" $files --title "Ritmo ${tag#v}" --generate-notes
+          fi
+          gh release view "$tag" --json assets --jq '.assets[].name'
