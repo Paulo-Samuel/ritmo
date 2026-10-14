@@ -29,6 +29,10 @@ jobs:
           tag="$GITHUB_REF_NAME"
           files="dist/Ritmo-Instalador.exe dist/Ritmo-Instalador.exe.blockmap dist/latest.yml"
           ls -l $files
+          # Se existir mais de uma versão com a mesma tag, fica só a que tem mais arquivos.
+          extras=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+            --jq ".[] | select(.tag_name == \"$tag\") | \"\(.assets | length) \(.id)\"" | sort -rn | tail -n +2 | cut -d' ' -f2)
+          for id in $extras; do echo "Apagando versão repetida $id"; gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id"; done
           if gh release view "$tag" > /dev/null 2>&1; then
             gh release upload "$tag" $files --clobber
           else
