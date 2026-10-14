@@ -31,7 +31,8 @@ function setupUpdates(getWindow) {
   const check = () => autoUpdater.checkForUpdates().catch(() => {});
   setTimeout(check, 5000);
   setInterval(check, CHECK_EVERY_MS);
-  return { check, install: () => autoUpdater.quitAndInstall(false, true) };
+  // Instala em silêncio (sem o assistente de "Próximo") e reabre o app já atualizado.
+  return { check, install: () => autoUpdater.quitAndInstall(true, true) };
 }
 
 module.exports = { setupUpdates };
