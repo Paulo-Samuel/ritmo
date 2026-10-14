@@ -1,0 +1,66 @@
+{
+  "name": "ritmo",
+  "productName": "Ritmo",
+  "version": "1.1.0",
+  "description": "Player de música local",
+  "author": "Paulo Samuel",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "repository": "github:Paulo-Samuel/ritmo",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "dist:portatil": "electron-builder --win portable",
+    "release": "npm version patch -m \"Ritmo %s\" && git push --follow-tags"
+  },
+  "build": {
+    "appId": "local.ritmo.player",
+    "productName": "Ritmo",
+    "files": [
+      "index.html",
+      "styles.css",
+      "app.js",
+      "main.js",
+      "preload.js",
+      "downloader.js",
+      "updater.js",
+      "icon.png"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Paulo-Samuel",
+      "repo": "ritmo",
+      "releaseType": "release"
+    },
+    "win": {
+      "icon": "icon.png",
+      "target": "nsis"
+    },
+    "portable": {
+      "artifactName": "Ritmo.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": [
+        "pt_BR"
+      ],
+      "language": "1046",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ritmo",
+      "artifactName": "Ritmo-Instalador.exe"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  }
+}
